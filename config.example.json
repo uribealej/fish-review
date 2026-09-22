@@ -1,0 +1,6 @@
+{
+  "derived_root": "D:/your-data/2p_derived",
+  "pipeline_root": "C:/your-code/calcium-imaging-pipeline",
+  "default_experiment": "Exp_8_accumulation_ev",
+  "default_fish": "L800_f09"
+}

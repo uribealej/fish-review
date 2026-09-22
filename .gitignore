@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+config.local.json
+.streamlit/secrets.toml
+logs/
+*.npy
+*.npz
+*.tif
+*.tiff
+*.png
+*.jpg
+*.csv
