@@ -1,24 +1,77 @@
 # Fish review
 
-A local browser app for calcium-imaging review, one experiment and one fish at a time.
+A local browser app for reviewing fish calcium-imaging experiments. Fish review brings
+Suite2p outputs, stimulus-response figures and manual quality assessments into one
+place, so researchers can inspect each fish and record whether to use it, exclude it,
+or review it further.
 
-## Run
+## What you can do
 
-Python 3.11 or newer:
+- Browse experiments and fish, check which processed outputs are available, and track review progress.
+- Inspect Suite2p cell/non-cell outlines, ROI counts and individual fluorescence traces.
+- Generate stimulus-average and individual-repetition rasters, plus AUC and maximum-amplitude summaries.
+- Record image quality, bleaching, Z-drift, response assessments, comments and a final decision.
+- Save reviews as YAML and regenerate fish, experiment and global HTML/CSV summaries.
+
+Availability and manual decisions are separate: missing files never automatically
+exclude a fish. You can pause a review and resume it later.
+
+## What you need
+
+- Python 3.11 and the packages listed in [requirements.txt](requirements.txt), or Conda with [environment.yml](environment.yml).
+- A browser. The app runs locally using Streamlit and listens only on localhost.
+- Existing Suite2p outputs and experiment inventories in the expected `2p` / `2p_derived`
+  layout. Response plots also need existing merged delta F/F traces, their ROI map,
+  acquisition metadata, block logs and stimulus trajectories.
+- A compatible local checkout of `calcium-imaging-pipeline`, which supplies the scientific
+  calculations and figure helpers. It must include `src/review_plots.py`, support for
+  unprefixed trajectory columns, and the optional `axis` argument to `plot_metric_bars`.
+  These companion changes currently exist locally and have not been published.
+
+Raw imaging files are not required. The app starts from processed outputs and does not
+run Suite2p or merge planes. Scientific data and local path configuration are not
+included in this repository.
+
+## Install and run
+
+Run these commands from the repository folder. With Conda:
+
+```powershell
+conda env create -f environment.yml
+conda activate fish-review
+```
+
+Create your local configuration once:
+
+```powershell
+Copy-Item config.example.json config.local.json
+```
+
+Edit `config.local.json`: set `derived_root` to your `2p_derived` folder and
+`pipeline_root` to your `calcium-imaging-pipeline` checkout. Set `default_experiment`
+and `default_fish` to your preferred starting selection, or remove those optional fields.
+Keep this configuration local; Git ignores it.
+
+Start the app from the activated Conda environment:
+
+```powershell
+python -m streamlit run app.py --server.address 127.0.0.1 --browser.gatherUsageStats false
+```
+
+Open **http://127.0.0.1:8501**. Keep the terminal open while using the app; press
+**Ctrl+C** to stop the server. Save pending reviews before closing or refreshing the browser.
+
+### Alternative: Python virtual environment
+
+If you prefer `venv`, create the environment and install the dependencies:
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-Copy-Item config.example.json config.local.json
-# Edit config.local.json with your local paths.
-.\start.ps1
 ```
 
-The development computer is already configured. Open http://127.0.0.1:8501.
-The server listens only on localhost. A compatible local calcium-imaging-pipeline checkout
-must include src/review_plots.py, unprefixed trajectory column support, and the optional
-axis argument to plot_metric_bars. These companion changes currently exist locally and
-have not been published. No merging is performed.
+Create and edit `config.local.json` as described above, then run `.\start.ps1` in
+PowerShell. This launcher uses `.venv`; for Conda, use the `python -m streamlit` command above.
 
 ## Review workflow
 
@@ -90,6 +143,14 @@ The chosen GitHub destination is a personal account; username and visibility rem
 Source data, reviews, local configuration, figures, logs and environments are ignored by Git.
 
 ## Validation
+
+From the activated Conda environment:
+
+```powershell
+python -m unittest discover -s tests -v
+```
+
+Or with the local virtual environment:
 
 ```powershell
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
