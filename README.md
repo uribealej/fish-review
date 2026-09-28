@@ -11,7 +11,7 @@ or review it further.
 - Inspect Suite2p cell/non-cell outlines, ROI counts and individual fluorescence traces.
 - Generate stimulus-average and individual-repetition rasters, plus AUC and maximum-amplitude summaries.
 - Record image quality, bleaching, Z-drift, response assessments, comments and a final decision.
-- Save reviews as YAML and regenerate fish, experiment and global HTML/CSV summaries.
+- Save reviews as YAML and regenerate experiment and global HTML/CSV summaries.
 
 Availability and manual decisions are separate: missing files never automatically
 exclude a fish. You can pause a review and resume it later.
@@ -52,6 +52,12 @@ Edit `config.local.json`: set `derived_root` to your `2p_derived` folder and
 and `default_fish` to your preferred starting selection, or remove those optional fields.
 Keep this configuration local; Git ignores it.
 
+When storing derived outputs separately from the source data, set `source_root`
+to the folder containing the source fish folders and `stimuli_root` to the folder
+containing stimulus experiment folders. Otherwise these default to `2p` and
+`stimuli` beside `derived_root`. Moving existing outputs also requires updating
+inventory source references and saved plot paths.
+
 Start the app from the activated Conda environment:
 
 ```powershell
@@ -72,6 +78,11 @@ python -m venv .venv
 
 Create and edit `config.local.json` as described above, then run `.\start.ps1` in
 PowerShell. This launcher uses `.venv`; for Conda, use the `python -m streamlit` command above.
+
+For a clickable Windows launcher, double-click **Open Fish Review.cmd**. It uses
+the same `.venv` and opens the app in your browser. You can create a desktop
+shortcut to this file for easy access. Keep its terminal window open while using
+the app, and save pending reviews before stopping it with **Ctrl+C**.
 
 ## Review workflow
 
@@ -95,7 +106,7 @@ Simultaneous stale saves are rejected rather than overwrite newer answers.
 - Inventory: 2p_derived/<experiment>/experiment_metadata.yaml. Relative source_folder links
   resolve against that file.
 - Manual authority: <fish>/01_raw/2p/metadata/fish_review.yaml.
-- Fish summaries: <experiment>/fish/<fish>.html.
+- Individual fish HTML reports are not generated; per-fish plots remain accessible in the app.
 - Experiment summary: <experiment>/experiment_overview.html and .csv.
 - Global summary: global/overview.html and .csv.
 - Segmentation: <experiment>/plots/segmentation/<fish>_segmentation.png,

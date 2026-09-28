@@ -12,6 +12,18 @@ from fish_review.plot_generation import plotting_defaults
 
 
 class ResponseSettingsTests(unittest.TestCase):
+    def test_separate_stimulus_root_after_moving_outputs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fish = Fish("f1", "exp", root / "data/2p/f1", root / "paper/2p_derived/exp")
+            parameters = root / "data/stimuli/exp/parameters/experiment_parameters.csv"
+            parameters.parent.mkdir(parents=True)
+            parameters.write_text("framerate\n30\n")
+            settings = plotting_defaults(fish, {"framerate": "2"}, fish.experiment_dir.parent,
+                                         stimuli_root=root / "data/stimuli")
+            self.assertEqual(Path(settings["stimuli_dir"]), parameters.parent.parent)
+            self.assertEqual(settings["stimulus_fps"], 30.0)
+
     def test_stimulus_rate_fallback_and_metadata(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

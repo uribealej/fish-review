@@ -72,8 +72,8 @@ class ReviewTests(unittest.TestCase):
         self.assertEqual(before, review_path(self.fish).read_bytes())
         self.assertIn("Imaging QC", rows[0]["Decision / reason"])
         self.assertEqual(rows[0]["Fish comment"], "Visible <comment>")
-        for path in [self.experiment / "fish/Test_f01.html",
-                     self.experiment / "experiment_overview.html",
+        self.assertFalse((self.experiment / "fish").exists())
+        for path in [self.experiment / "experiment_overview.html",
                      self.root / "2p_derived/global/overview.html"]:
             text = path.read_text()
             self.assertIn("Strong Z-drift", text)

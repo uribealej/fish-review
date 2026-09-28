@@ -113,9 +113,9 @@ def generate_segmentation(fish, pipeline_root):
     return record
 
 
-def plotting_defaults(fish, metadata, derived_root):
+def plotting_defaults(fish, metadata, derived_root, stimuli_root=None):
     """Discover candidate settings from this fish, marking unresolved timing explicitly."""
-    stimuli = Path(derived_root).parent / "stimuli" / fish.experiment_id
+    stimuli = (Path(stimuli_root) if stimuli_root else Path(derived_root).parent / "stimuli") / fish.experiment_id
     logs = list((fish.source / "01_raw/2p/metadata").glob("*_block_log.csv"))
     blocks = []
     if len(logs) == 1:

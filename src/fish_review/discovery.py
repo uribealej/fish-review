@@ -5,7 +5,7 @@ from pathlib import Path
 import yaml
 from fish_review.reviews import atomic_write
 
-SKELETON = ("fish", "plots/segmentation", "plots/general", "aligned_traces", "neuron_index", "stimuli")
+SKELETON = ("plots/segmentation", "plots/general", "aligned_traces", "neuron_index", "stimuli")
 
 
 def discover(source_root, experiment):

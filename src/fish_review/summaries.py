@@ -1,4 +1,4 @@
-"""Regenerate fish, experiment and global views from authoritative records."""
+"""Regenerate experiment and global views from authoritative records."""
 import csv
 import html
 import io
@@ -98,11 +98,6 @@ def export_summaries(experiments, derived_root):
             try:
                 scan = scan_fish(fish)
                 row = overview_row(fish, scan)
-                plot_links = "".join(f'<li><a href="{html.escape(Path(path).as_uri(), quote=True)}">'
-                                     f'{html.escape(Path(path).name)}</a></li>' for path in scan["plots"] + scan.get("interactive_plots", []))
-                extra = f"<h2>Supporting plots</h2><ul>{plot_links}</ul>"
-                atomic_write(fish.experiment_dir / "fish" / f"{fish.fish_id}.html",
-                             html_page(fish.fish_id, [row], extra))
                 rows.append(row)
             except (OSError, ValueError, KeyError) as error:
                 errors.append(f"{fish.fish_id}: {error}")

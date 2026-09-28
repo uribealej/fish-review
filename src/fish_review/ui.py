@@ -69,7 +69,7 @@ def show_manifest(folder, filename):
 def refresh_summaries(experiments, config):
     """Regenerate derived summaries while reporting independent export failures."""
     try:
-        with st.spinner("Updating fish, experiment and global summaries..."):
+        with st.spinner("Updating experiment and global summaries..."):
             _, errors = export_summaries(experiments, config["derived_root"])
         for error in errors:
             st.warning(error)
@@ -80,7 +80,8 @@ def refresh_summaries(experiments, config):
 def response_settings(fish, scan, config, prefix):
     """Expose fish-specific paths and timing without importing notebook example values."""
     try:
-        defaults = plotting_defaults(fish, scan["metadata"], config["derived_root"])
+        defaults = plotting_defaults(fish, scan["metadata"], config["derived_root"],
+                                     stimuli_root=config.get("stimuli_root"))
     except (OSError, ValueError, KeyError) as error:
         st.warning(f"Cannot infer plotting settings: {error}")
         return None
@@ -163,7 +164,7 @@ def render_review(fish, scan, config, experiments, clear_scans):
         st.rerun()
     manual["comment"] = st.text_area("Fish comment", manual["comment"], height=100,
                                       key=prefix+"_comment",
-                                      help="Visible in fish, experiment and global summaries after saving.")
+                                      help="Visible in experiment and global summaries after saving.")
     st.caption("Edits stay in this browser session while you navigate. Use Save review to keep them after closing the app.")
     tabs = st.tabs(["Available data", "Imaging QC", "Suite2p", "Raw fluorescence", "Responses", "Final decision", "Metadata"])
     actions = []
